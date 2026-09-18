@@ -1,0 +1,61 @@
+\documentclass[11pt]{article}
+\input{commands}  % Packages and definitions specified here.
+\input{notation}  % Conveniently define (and quickly redefine!) notation here.
+
+\title{\large ECE 532/COS 572/MAE 572/ROB 532 \\[-1mm]
+       \LARGE Safety-Critical Robotics and AI \\[1mm]
+       \large Problem Set 1}
+\author{Yixun Hu}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section*{Problem 1}
+\noindent \textbf{Citations and math.}
+% Example sentence with citation (include the BibTeX info in references.bib).
+In the following, we recall that \emph{%
+    all models are wrong, but some are useful}~\cite{box1976science}.
+
+% Feel free to use the macros in notation.tex, modify them or add your own.
+\begin{enumerate}[itemsep=-2pt]
+  \item The discrete-time system dynamics are ${\state}_{\tvar+1} = \dyn_\tvar(\state_\tvar,\ctrl_\tvar,\dstb_\tvar)$.
+  \item The inevitable backward-reachable tube of the failure set is
+        $\inevitable{\backward{\reach}}_{\tvar:\horizon}(\failure) \subset \reals^n$.
+\end{enumerate}
+
+
+\noindent \textbf{Including code.}
+You can use \lstinline{\lstinputlisting} to include code snippets/files if you like.
+Check out \url{https://www.overleaf.com/learn/latex/Code_listing} for details.
+The code below is rendered directly from the example file \lstinline{steer.py} included with this template.
+
+\lstinputlisting[language=Python]{steer.py}  % Set your language here.
+
+\noindent \textbf{From a notebook to your write-up.}
+\LaTeX\ won't read \lstinline{.ipynb} files directly, but you can instead save each function you want to show into its own \lstinline{.py} file, drop those files to your \LaTeX\ project folder, and include them exactly as above. 
+This is easy with a file-export cell at the end of your Jupyter/Colab notebook:
+
+\begin{lstlisting}[language=Python]
+import inspect
+from google.colab import files      # Colab only; drop outside Colab.
+
+SUBMIT = ["steer"]                  # Functions to show in your write-up.
+
+for name in SUBMIT:
+    fn = globals().get(name)
+    if fn is not None:
+        with open(f"{name}.py", "w") as f:
+            f.write(inspect.getsource(fn))
+    files.download(f"{name}.py")    # Colab only; drop outside Colab.
+\end{lstlisting}
+
+\noindent This writes your implementation of \lstinline{steer} to \lstinline{steer.py},
+ready to sit next to \lstinline{main.tex} and be included as above. Please include only
+the functions a problem actually asks for, rather than a full notebook export.
+
+% If you are citing any references, you can use the standard bibliography below.
+\bibliographystyle{IEEEtran}
+\bibliography{references}  % Comment out if not including a bibliography.
+
+\end{document}
