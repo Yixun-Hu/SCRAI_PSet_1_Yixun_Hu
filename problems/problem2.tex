@@ -1,0 +1,163 @@
+% Problem 2 -- included from hw.tex via \input{problems/problem2}.
+% Paths (figures/, *.py) are relative to the directory of hw.tex.
+
+%===============================================================================
+\section*{Problem 2: 1-D Reachable Sets}
+%===============================================================================
+
+\noindent\textbf{Setup.}
+The control signals $\ctrl(\cdot)$ are measurable with values in $[-1,1]$, and the \emph{all-time}
+tubes are the tubes over the horizon $[\tvar_0,\infty)$:
+\begin{align*}
+\eBRTinf{\mathcal M}&=\{\state_0:\ \exists\,\ctrl(\cdot),\ \exists\,\taux\ge\tvar_0,\ \trju{\ctrl}{\taux}\in\mathcal M\},\\
+\iBRTinf{\mathcal M}&=\{\state_0:\ \forall\,\ctrl(\cdot),\ \exists\,\taux_{\ctrl}\ge\tvar_0,\ \trju{\ctrl}{\taux_{\ctrl}}\in\mathcal M\}.
+\end{align*}
+Both tubes contain $\mathcal M$ itself (take $\taux=\tvar_0$), and the inevitable tube is contained
+in the enforceable one (Problem~1.2(a)). Without loss of generality $\tvar_0=0$. In every
+``inevitable'' claim below the hitting time is bounded uniformly over the controls, so the answers
+are unchanged if the all-time tubes are instead defined as $\bigcup_{\tvar\ge\tvar_0}$ of the
+finite-horizon tubes. The sets of interest are
+$\Mone=[\tfrac12,2]$ and $\Mtwo=[-3,-\tfrac12]\cup[2,3]$.
+
+\subsection*{Part 1: stable dynamics $\dot\state=-\state+\ctrl$}
+
+Since $\dot\state\in[-\state-1,\,-\state+1]$: for $\state>1$ every control gives $\dot\state<0$, for
+$\state<-1$ every control gives $\dot\state>0$, and for $\state\in[-1,1]$ the controller can hold the
+state ($\ctrl\equiv\state$), push it up ($\ctrl\equiv1$) or push it down ($\ctrl\equiv-1$). The
+extreme closed-loop trajectories are
+\begin{align*}
+\ctrl\equiv1:&\quad \state(\tvar)=1+(\state_0-1)e^{-\tvar}\qquad(\text{monotone to }1),\\
+\ctrl\equiv-1:&\quad \state(\tvar)=-1+(\state_0+1)e^{-\tvar}\qquad(\text{monotone to }-1),
+\end{align*}
+and by the comparison principle every trajectory is sandwiched between them:
+\begin{equation}\label{eq:stable-bounds}
+-1+(\state_0+1)e^{-\tvar}\ \le\ \state(\tvar)\ \le\ 1+(\state_0-1)e^{-\tvar},
+\quad\text{hence}\quad
+\min(\state_0,-1)\le\state(\tvar)\le\max(\state_0,1).
+\end{equation}
+The drift pulls every state toward $[-1,1]$ and no control can move the state \emph{away} from the
+origin past $\pm1$.
+
+\begin{enumerate}[label=(\alph*), itemsep=3pt]
+\item $\Mone=[\tfrac12,2]$.
+
+\emph{Enforceable tube:} $\eBRTinf{\Mone}=\reals$.
+For $\state_0\in\Mone$ take $\taux=0$. For $\state_0>2$, every control gives
+$\dot\state\le-\state+1\le-1$ as long as $\state\ge2$, so the state decreases and hits $2\in\Mone$ no
+later than $\taux=\state_0-2$ (for \emph{every} control). For $\state_0<\tfrac12$, the control
+$\ctrl\equiv1$ gives $\state(\tvar)=1+(\state_0-1)e^{-\tvar}\uparrow1$, which crosses $\tfrac12$ at
+the finite time $\taux=\ln\bigl(2(1-\state_0)\bigr)$.
+
+\emph{Inevitable tube:} $\iBRTinf{\Mone}=[\tfrac12,\infty)$.
+Points of $\Mone$ and points $\state_0>2$ are inevitable by the argument above. For
+$\state_0<\tfrac12$ the control $\ctrl\equiv-1$ gives $\state(\tvar)=-1+(\state_0+1)e^{-\tvar}$,
+which stays between $\state_0$ and $-1$ for all times, hence $\state(\tvar)\le\max(\state_0,-1)<\tfrac12$
+and the trajectory never enters $\Mone$.
+
+\item $\Mtwo=[-3,-\tfrac12]\cup[2,3]$.
+
+\emph{Enforceable tube:} $\eBRTinf{\Mtwo}=\reals$.
+For $\state_0\in\Mtwo$ take $\taux=0$. For $\state_0>3$, every control gives
+$\dot\state\le-\state+1\le-2$ while $\state\ge3$, so the state hits $3\in\Mtwo$ no later than
+$\taux=(\state_0-3)/2$; symmetrically, for $\state_0<-3$ every control gives
+$\dot\state\ge-\state-1\ge2$ while $\state\le-3$, so the state hits $-3\in\Mtwo$ no later than
+$\taux=(-3-\state_0)/2$. For $\state_0\in(-\tfrac12,2)$ the control $\ctrl\equiv-1$ gives
+$\state(\tvar)=-1+(\state_0+1)e^{-\tvar}\downarrow-1$, which crosses $-\tfrac12$ at the finite time
+$\taux=\ln\bigl(2(\state_0+1)\bigr)$.
+
+\emph{Inevitable tube:} $\iBRTinf{\Mtwo}=(-\infty,-\tfrac12]\cup[2,\infty)$.
+Points of $\Mtwo$ and points with $\state_0>3$ or $\state_0<-3$ are inevitable by the argument above.
+The remaining points $\state_0\in(-\tfrac12,2)$ can avoid $\Mtwo$ forever: if $\state_0\in(-\tfrac12,1]$,
+the constant control $\ctrl\equiv\state_0$ (admissible since $|\state_0|\le1$) holds
+$\state(\tvar)\equiv\state_0\notin\Mtwo$; if $\state_0\in(1,2)$, the control $\ctrl\equiv1$ gives
+$\state(\tvar)=1+(\state_0-1)e^{-\tvar}\in(1,\state_0]\subset(1,2)$ for all times.
+\end{enumerate}
+
+\subsection*{Part 2: unstable dynamics $\dot\state=\state+\ctrl$}
+
+Now $\dot\state\in[\state-1,\,\state+1]$: for $\state>1$ every control gives $\dot\state>0$, for
+$\state<-1$ every control gives $\dot\state<0$, and on $(-1,1)$ the controller can hold the state
+($\ctrl\equiv-\state$) or steer it in either direction. The extreme trajectories are
+\[
+\ctrl\equiv1:\ \state(\tvar)=-1+(\state_0+1)e^{\tvar},\qquad
+\ctrl\equiv-1:\ \state(\tvar)=1+(\state_0-1)e^{\tvar},
+\]
+and every trajectory satisfies
+\begin{equation}\label{eq:unstable-bounds}
+1+(\state_0-1)e^{\tvar}\ \le\ \state(\tvar)\ \le\ -1+(\state_0+1)e^{\tvar}.
+\end{equation}
+Consequently: if $\state_0>1$ then $\state(\tvar)>\state_0$ for all $\tvar>0$ and
+$\state(\tvar)\to\infty$ for every control; if $\state_0\le-1$ then $\state(\tvar)\le-1$ for all
+times (and $\state(\tvar)\to-\infty$ if $\state_0<-1$); the drift now pushes the state \emph{away}
+from the origin, and the controller only has authority inside $[-1,1]$.
+
+\begin{enumerate}[label=(\alph*), itemsep=3pt]
+\item $\Mone=[\tfrac12,2]$.
+
+\emph{Enforceable tube:} $\eBRTinf{\Mone}=(-1,2]$.
+For $\state_0\in\Mone$ take $\taux=0$. For $\state_0\in(-1,\tfrac12)$ the control $\ctrl\equiv1$
+gives $\state(\tvar)=-1+(\state_0+1)e^{\tvar}\uparrow\infty$, which crosses $\tfrac12$ at the finite
+time $\taux=\ln\bigl(\tfrac{3}{2(\state_0+1)}\bigr)$. For $\state_0>2$, \eqref{eq:unstable-bounds}
+gives $\state(\tvar)>\state_0>2$ for every control, and for $\state_0\le-1$ it gives
+$\state(\tvar)\le-1<\tfrac12$ for every control; neither can ever reach $\Mone$.
+
+\emph{Inevitable tube:} $\iBRTinf{\Mone}=[\tfrac12,2]=\Mone$.
+Points outside $(-1,2]$ are not even enforceable. For $\state_0\in(-1,\tfrac12)$ the control
+$\ctrl\equiv-1$ gives $\state(\tvar)=1+(\state_0-1)e^{\tvar}$, which is decreasing because
+$\state_0<1$, so $\state(\tvar)\le\state_0<\tfrac12$ forever and $\Mone$ is avoided.
+
+\item $\Mtwo=[-3,-\tfrac12]\cup[2,3]$.
+
+\emph{Enforceable tube:} $\eBRTinf{\Mtwo}=[-3,3]$.
+For $\state_0\in\Mtwo$ take $\taux=0$. For $\state_0\in(-\tfrac12,2)$ the control $\ctrl\equiv1$
+gives $\state(\tvar)=-1+(\state_0+1)e^{\tvar}\uparrow\infty$, which crosses $2\in\Mtwo$ in finite
+time. For $\state_0>3$ we have $\state(\tvar)>\state_0>3$, and for $\state_0<-3$ we have
+$\state(\tvar)<\state_0<-3$, for every control and all $\tvar>0$; $\Mtwo$ is never reached.
+
+\emph{Inevitable tube:} $\iBRTinf{\Mtwo}=[-3,-\tfrac12]\cup(1,3]$.
+For $\state_0\in(1,2)$, \eqref{eq:unstable-bounds} gives $\state(\tvar)\ge1+(\state_0-1)e^{\tvar}$
+for every control; the right-hand side equals $2$ at $\tvar=\ln\bigl(1/(\state_0-1)\bigr)$, so the
+continuous trajectory, which starts below $2$, crosses $2\in\Mtwo$ no later than that time. Thus
+$(1,2)\subset\iBRTinf{\Mtwo}$ even though $(1,2)\cap\Mtwo=\emptyset$: the unstable drift drags these
+states into $[2,3]$. For $\state_0\in(-\tfrac12,1]$ the constant control $\ctrl\equiv-\state_0$
+(admissible since $|\state_0|\le1$) holds $\state(\tvar)\equiv\state_0\notin\Mtwo$. Points with
+$|\state_0|>3$ are not enforceable.
+\end{enumerate}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcc}
+\hline
+ & stable $\dot\state=-\state+\ctrl$ & unstable $\dot\state=\state+\ctrl$ \\
+\hline
+$\eBRTinf{\Mone}$ & $\reals$ & $(-1,2]$ \\
+$\iBRTinf{\Mone}$ & $[\tfrac12,\infty)$ & $[\tfrac12,2]$ \\
+$\eBRTinf{\Mtwo}$ & $\reals$ & $[-3,3]$ \\
+$\iBRTinf{\Mtwo}$ & $(-\infty,-\tfrac12]\cup[2,\infty)$ & $[-3,-\tfrac12]\cup(1,3]$ \\
+\hline
+\end{tabular}
+\caption{Summary of the all-time backward-reachable tubes in Problem 2.}
+\end{table}
+
+\subsection*{Part 3: a set that is strictly easier to reach with the unstable dynamics}
+
+Take $\Mthree:=[2,\infty)$.
+\begin{itemize}[itemsep=2pt]
+\item \emph{Stable dynamics:} $\eBRTinf{\Mthree}=[2,\infty)=\Mthree$. Points of $\Mthree$ are
+      trivially included. For $\state_0<2$, \eqref{eq:stable-bounds} gives
+      $\state(\tvar)\le\max(\state_0,1)<2$ for every control and every time, so $\Mthree$ is never
+      reached: bounded controls cannot overcome the drift toward the origin once $\state>1$.
+\item \emph{Unstable dynamics:} $\eBRTinf{\Mthree}=(-1,\infty)$. For $\state_0>-1$ the control
+      $\ctrl\equiv1$ gives $\state(\tvar)=-1+(\state_0+1)e^{\tvar}\uparrow\infty$, which crosses $2$
+      in finite time. For $\state_0\le-1$, \eqref{eq:unstable-bounds} gives $\state(\tvar)\le-1$
+      for every control, so $\Mthree$ is unreachable.
+\end{itemize}
+Hence $(-1,\infty)\supsetneq[2,\infty)$: the enforceable tube under the unstable dynamics strictly
+contains the one under the stable dynamics. Intuitively, the controller can nudge any state in
+$(-1,1)$ slightly past $1$ and then let the instability carry it arbitrarily far, whereas the stable
+drift pulls everything back toward $[-1,1]$, so a far-away target can only be reached from states
+that are already beyond it. Any $\Mthree=[a,\infty)$ with $a\ge1$ works (as does the symmetric
+$(-\infty,-a]\cup[a,\infty)$, whose enforceable tubes are itself and $\reals$, respectively). Bounded
+targets cannot work: for $\Mthree=[a,b]$ with $a>1$ the two enforceable tubes are $[a,\infty)$ and
+$(-1,b]$, and neither contains the other, since the stable drift lets far-away states fall back onto
+the target while the unstable drift never lets states beyond the target come back.
